@@ -1,55 +1,28 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { FormGroup, FormControl, InputGroup, Glyphicon } from 'react-bootstrap';
-import Gallery from './components/Gallery.js';
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import SaveBooks from "./pages/SaveBooks";
+import SearchBooks from "./pages/SearchBooks";
+import NoMatch from "./pages/NoMatch";
+import Nav from "./components/Nav";
+import Footer from "./components/Footer"
+import "./App.css"
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      query: '',
-      items: []
-    };
-  }
 
-  search() {
-    const API_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
-    fetch(`${API_URL}${this.state.query}`)
-      .then(response => response.json())
-      .then(json => {
-        let {items} = json;
-        this.setState({items})
-      }); 
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Book Finder</h1>
-        </header>
-        <div className="container main-content">
-          <FormGroup>
-            <InputGroup>
-              <FormControl type="text" placeholder="Search for a book"
-              onChange={ event => this.setState({ query: event.target.value }) }
-              onKeyPress={ event => {
-                if ('Enter' === event.key) {
-                  this.search();
-                }
-              }} />
-              <InputGroup.Addon onClick={() => this.search()}>
-                <Glyphicon glyph="search"></Glyphicon>
-              </InputGroup.Addon>
-            </InputGroup>
-          </FormGroup>
-          <Gallery items={this.state.items} />
-        </div>
+function App() {
+  return (
+    <Router>
+      <div>
+        <Nav />
+        <Switch>
+          <Route exact path="/" component={SearchBooks} />
+          <Route exact path="/saved" component={SaveBooks} />
+          <Route exact path="/saved/:id" component={SaveBooks} />
+          <Route component={NoMatch} /> 
+        </Switch>
+        <Footer />
       </div>
-    );
-  }
+    </Router>
+  );
 }
 
 export default App;
